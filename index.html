@@ -6,35 +6,77 @@
   <title>ミニーパルパルーザ｜しおり（2026-03-01）</title>
 
   <style>
+    /* =========================
+       Theme (Minnie polka + white + deep pink + tiny aqua)
+       ========================= */
     :root{
-      --pink:#ff2d8a;         /* パルパル濃 */
+      --pink:#ff2d8a;          /* 濃ピンク */
       --pink2:#ff0f74;
-      --pinkSoft:#ffe3f0;     /* 中間（薄ピンク） */
-      --bg:#fff7fb;
+      --pinkSoft:#ffe3f0;      /* 薄ピンク */
+      --pinkFill:#ff6aa7;      /* ミニーっぽい塗り */
+
+      --aqua:#65cfff;          /* 水色（控えめに） */
+      --aquaDeep:#2bb7ff;
+      --aquaSoft:rgba(101,207,255,.12);
+
+      --bg: var(--pinkSoft);
       --card:#ffffff;
       --ink:#111;
       --muted:#6a6a6a;
       --line:rgba(0,0,0,.08);
-      --shadow:0 10px 24px rgba(0,0,0,.08);
-      --r:16px;
+      --shadow:0 12px 28px rgba(0,0,0,.08);
+      --r:18px;
+
+      /* Responsive type */
+      --fz11: clamp(11px, 2.8vw, 12px);
+      --fz12: clamp(12px, 3.0vw, 13px);
+      --fz13: clamp(13px, 3.2vw, 14px);
+      --fz14: clamp(14px, 3.4vw, 15px);
+
+      /* Schedule: smaller */
+      --sfz9:  clamp(9px,  2.4vw, 10px);
+      --sfz10: clamp(10px, 2.6vw, 11px);
+      --sfz11: clamp(11px, 2.8vw, 12px);
     }
 
     *{box-sizing:border-box;}
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
-      background: radial-gradient(1100px 650px at 10% 0%, rgba(255,45,138,.14) 0%, rgba(255,255,255,0) 55%), var(--bg);
       color:var(--ink);
       -webkit-text-size-adjust:100%;
-    }
-    .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding: env(safe-area-inset-top) 12px env(safe-area-inset-bottom) 16px;
+      overflow-x:hidden;
+
+      /* ③ ベース背景：薄ピンクに白ドット（ミニー柄） */
+      background:
+        radial-gradient(circle, rgba(255,255,255,.92) 0 4px, rgba(255,255,255,0) 5px) 0 0/28px 28px,
+        var(--bg);
     }
 
-    /* Header: title + (now, swap) only */
-    header{ padding:12px 4px 8px; }
+    /* Top accent (keep, but light) */
+    body::before{
+      content:"";
+      position:fixed;
+      left:0; right:0; top:0;
+      height: 280px;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 320px at 12% 0%, rgba(255,45,138,.16) 0%, rgba(255,45,138,0) 70%),
+        radial-gradient(700px 260px at 92% 10%, rgba(101,207,255,.08) 0%, rgba(101,207,255,0) 70%),
+        radial-gradient(circle, rgba(255,255,255,.90) 0 4px, rgba(255,255,255,0) 5px) 0 0/28px 28px,
+        linear-gradient(180deg, rgba(255,106,167,.18) 0%, rgba(255,255,255,0) 78%);
+      opacity:.95;
+      z-index:-1;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin:0 auto;
+      padding: env(safe-area-inset-top) 12px env(safe-area-inset-bottom) 18px;
+    }
+
+    /* Header */
+    header{ padding: 14px 4px 10px; }
     .topRow{
       display:flex;
       align-items:center;
@@ -43,29 +85,34 @@
     }
     .h1{
       margin:0;
-      font-size:18px;
+      font-size: clamp(18px, 4.2vw, 22px);
       font-weight:1000;
       letter-spacing:.02em;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+
+      /* ③ タイトル文字色：水色系 */
+      color: var(--aquaDeep);
+      text-shadow: 0 10px 24px rgba(101,207,255,.18);
     }
     .topBtns{ display:flex; gap:8px; flex:0 0 auto; }
     .btn{
       appearance:none;
       border:1px solid var(--line);
-      background:#fff;
+      background: rgba(255,255,255,.92);
       padding:10px 12px;
-      border-radius: 12px;
-      font-size:12px;
+      border-radius: 14px;
+      font-size: var(--fz12);
       font-weight:1000;
       color:#222;
+      box-shadow: 0 10px 22px rgba(0,0,0,.04);
     }
     .btn.primary{
       border:none;
       background: linear-gradient(180deg, var(--pink) 0%, var(--pink2) 100%);
       color:#fff;
-      box-shadow: 0 12px 22px rgba(255,45,138,.22);
+      box-shadow: 0 14px 26px rgba(255,45,138,.22);
     }
     .btn:active{ transform: translateY(1px); }
 
@@ -78,30 +125,36 @@
       padding: 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.82);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       border:1px solid var(--line);
       box-shadow: var(--shadow);
-      display:flex; gap:8px; overflow:auto;
+      display:flex;
+      gap:8px;
+      overflow:auto;
       -webkit-overflow-scrolling:touch;
     }
     .tabBtn{
-      appearance:none; border:none; background:transparent;
+      appearance:none;
+      border:none;
+      background:transparent;
       padding: 10px 12px;
       border-radius: 999px;
-      font-size: 13px; font-weight: 1000;
-      color:#333; white-space:nowrap;
+      font-size: var(--fz13);
+      font-weight:1000;
+      color:#333;
+      white-space:nowrap;
     }
     .tabBtn[aria-selected="true"]{
       background: linear-gradient(180deg, var(--pink) 0%, var(--pink2) 100%);
       color:#fff;
-      box-shadow: 0 12px 22px rgba(255,45,138,.25);
+      box-shadow: 0 14px 26px rgba(255,45,138,.22);
     }
     .panel{ display:none; }
     .panel.active{ display:block; }
 
     /* Cards */
     .card{
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       border:1px solid var(--line);
       border-radius: var(--r);
       box-shadow: var(--shadow);
@@ -109,63 +162,155 @@
       margin: 12px 0;
     }
     .cardInner{ padding: 14px; }
-    .sectionTitle{ margin:0 0 10px; font-size:14px; font-weight:1000; }
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size: var(--fz14);
+      font-weight:1000;
+      letter-spacing:.01em;
+    }
+    .muted{ color: var(--muted); font-size: var(--fz12); line-height:1.6; }
 
-    /* Schedule grid: Actual | Time | Plan */
+    /* =========================
+       Schedule (hour rows, events packed vertically by 10-min order)
+       Plan LEFT, Actual RIGHT
+       ========================= */
     .schedHead{
       display:grid;
-      grid-template-columns: 1fr 82px 1fr;
-      gap:8px;
+      grid-template-columns: 1fr 70px 1fr; /* Plan | Time | Actual */
+      gap:10px;
       padding: 12px 12px 0;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 900;
+      font-size: var(--fz12);
+      font-weight: 1000;
     }
     .schedBody{
       padding: 10px 12px 14px;
       display:flex;
       flex-direction:column;
-      gap:8px;
+      gap:10px;
     }
     .hourRow{
       display:grid;
-      grid-template-columns: 1fr 82px 1fr;
-      gap:8px;
+      grid-template-columns: 1fr 70px 1fr;
+      gap:10px;
       align-items:stretch;
     }
 
     .timeCell{
       border:1px solid var(--line);
-      background: rgba(255,255,255,.9);
-      border-radius: 14px;
-      padding: 12px 10px;
-      font-size: 12px;
-      font-weight: 1000;
+      background: rgba(255,255,255,.92);
+      border-radius: 16px;
+      padding: 12px 8px;
+      font-size: var(--sfz11);
+      font-weight:1000;
       display:flex;
       align-items:center;
       justify-content:center;
+      position:relative;
+    }
+    .timeCell::after{
+      content:"";
+      position:absolute;
+      inset: 8px;
+      border-radius: 12px;
+      border: 1px dashed rgba(0,0,0,.06);
+      pointer-events:none;
     }
 
     .cell{
       border:1px solid var(--line);
       background: rgba(255,255,255,.92);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 10px 10px;
       position:relative;
-      min-height: 52px;
+      min-height: 72px;
       overflow:hidden;
     }
     .cell .bar{
       position:absolute; left:0; top:0; bottom:0; width:6px;
-      background: rgba(0,0,0,.04);
+      background: rgba(0,0,0,.03);
+    }
+    .cell.plan .bar{ background: rgba(255,45,138,.10); }
+    .cell.actual .bar{ background: rgba(0,0,0,.03); }
+
+    /* ① 10分刻み：縦に詰める（空欄を作らない） */
+    .vtrack{
+      padding-left: 8px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
 
-    /* Actual input (left) */
+    .ev{
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.10);
+      background: #fff;
+      padding: 8px 8px;
+      cursor:pointer;
+      user-select:none;
+      box-shadow: 0 10px 18px rgba(0,0,0,.06);
+      overflow:hidden;
+    }
+    .ev.pal{
+      border-color: rgba(255,45,138,.32);
+      background:
+        radial-gradient(circle, rgba(255,255,255,.95) 0 3px, rgba(255,255,255,0) 4px) 0 0/22px 22px,
+        linear-gradient(180deg, rgba(255,45,138,.18) 0%, rgba(255,45,138,.08) 100%);
+    }
+    .ev.soft{
+      border-color: rgba(255,45,138,.16);
+      background: linear-gradient(180deg, rgba(255,45,138,.06) 0%, rgba(255,255,255,.95) 100%);
+    }
+    .ev.aqua{
+      border-color: rgba(101,207,255,.28);
+      background: linear-gradient(180deg, var(--aquaSoft) 0%, rgba(255,255,255,.96) 100%);
+    }
+
+    /* ① スケジュール文字サイズをぐっと小さく */
+    .evTop{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .evTime{
+      font-size: var(--sfz9);
+      font-weight:1000;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      color:#333;
+    }
+    .evTitle{
+      flex:1 1 auto;
+      font-size: var(--sfz10);
+      font-weight:1000;
+      line-height:1.2;
+      color:#111;
+
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .evSum{
+      margin-top:5px;
+      font-size: var(--sfz10);
+      color:#333;
+      line-height:1.35;
+
+      display:-webkit-box;
+      -webkit-line-clamp: 2;   /* 1文載せつつ、暴走防止 */
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .ev.pal .evTime,
+    .ev.pal .evTitle{ color:#7a0034; }
+
+    /* Actual input */
     .actualWrap{
+      padding-left: 8px;
       display:flex;
       align-items:center;
       gap:10px;
-      padding-left: 8px;
     }
     .actualWrap input[type="checkbox"]{
       width:18px; height:18px; accent-color: var(--pink);
@@ -175,112 +320,135 @@
       width:100%;
       border:1px solid rgba(0,0,0,.12);
       background:#fff;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px 10px;
-      font-size: 12px;
+      font-size: var(--sfz11); /* schedule smaller */
       outline:none;
-    }
-
-    /* Plan blocks (right): only squares for actual event times */
-    .planArea{
-      padding-left: 8px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .block{
-      border:1px solid rgba(0,0,0,.10);
-      border-radius: 12px;
-      padding: 10px 10px;
-      background: rgba(0,0,0,.02); /* 通常は薄い */
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .block .left{
-      min-width:0;
-    }
-    .block .t{
-      font-size:12px;
-      font-weight:1000;
-      line-height:1.15;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .block .s{
-      font-size:11px;
-      color: var(--muted);
-      font-weight:900;
-      margin-top:4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    /* Color rules */
-    .block.pal{
-      background: rgba(255,45,138,.10);
-      border-color: rgba(255,45,138,.28);
-      box-shadow: 0 10px 18px rgba(255,45,138,.10);
-    }
-    .block.pal .t{ color:#7a0034; }
-    .block.pal .s{ color:#8a2450; }
-
-    .block.soft{
-      background: rgba(255,45,138,.05);
-      border-color: rgba(255,45,138,.16);
     }
 
     /* Now highlight */
     .hourRow.now .timeCell,
     .hourRow.now .cell{
-      outline: 2px solid rgba(255,45,138,.22);
-      box-shadow: 0 16px 30px rgba(255,45,138,.12);
+      outline: 2px solid rgba(255,45,138,.20);
+      box-shadow: 0 18px 34px rgba(255,45,138,.12);
+    }
+    .hourRow.now .timeCell{
+      outline-color: rgba(101,207,255,.28);
     }
 
-    /* Todo list */
+    /* Swap layout (⇔) */
+    .swap .planCol{ order:3; }
+    .swap .timeCol{ order:2; }
+    .swap .actualCol{ order:1; }
+
+    /* Todo lists */
+    .subHead{
+      margin: 14px 0 10px;
+      font-size: var(--fz13);
+      font-weight:1000;
+      color:#222;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .subHead::after{
+      content:"";
+      height:1px;
+      flex:1 1 auto;
+      background: linear-gradient(90deg, rgba(0,0,0,.08), rgba(0,0,0,0));
+    }
     .checkList{ display:flex; flex-direction:column; gap:10px; }
     .checkItem{
-      display:flex; align-items:center; gap:10px;
-      padding: 10px 10px;
-      border:1px solid rgba(255,45,138,.16);
-      background: rgba(255,45,138,.06);
-      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 11px 12px;
+      border:1px solid rgba(255,45,138,.14);
+      background: rgba(255,45,138,.05);
+      border-radius: 16px;
     }
     .checkItem input{ width:20px; height:20px; accent-color: var(--pink); }
     .checkItem .txt{
-      font-size: 13px;
-      font-weight: 1000;
+      font-size: var(--fz13);
+      font-weight:1000;
       color:#7a0034;
-      line-height:1.3;
+      line-height:1.28;
     }
 
-    .subHead{
-      margin: 14px 0 10px;
-      font-size: 13px;
-      font-weight: 1000;
+    /* Major info UI (unchanged from v1.3) */
+    .infoGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 880px){
+      .infoGrid{ grid-template-columns: 1fr 1fr; }
+    }
+    .infoCard{
+      background: rgba(255,255,255,.94);
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .krow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 0;
+      border-top:1px solid rgba(0,0,0,.06);
+    }
+    .krow:first-child{ border-top:none; }
+    .kleft{
+      min-width:0;
+      font-weight:1000;
+      font-size: var(--fz13);
+      color:#222;
+    }
+    .kright{
+      text-align:right;
+      font-weight:1000;
+      font-size: var(--fz13);
+      color:#111;
+      white-space:nowrap;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: var(--fz11);
+      font-weight:1000;
+      border:1px solid rgba(0,0,0,.08);
+      background: rgba(0,0,0,.02);
       color:#333;
+      margin-top:8px;
+    }
+    .tag.pal{
+      border-color: rgba(255,45,138,.22);
+      background: rgba(255,45,138,.08);
+      color:#7a0034;
+    }
+    .tag.aqua{
+      border-color: rgba(101,207,255,.22);
+      background: rgba(101,207,255,.10);
+      color:#0d4e6b;
     }
 
-    /* Info lists */
-    .list{ margin:0; padding-left: 18px; font-size: 12.5px; line-height:1.65; color:#333; }
-    .list li{ margin:6px 0; }
-    .muted{ color: var(--muted); font-size:12px; line-height:1.55; }
-
-    /* Links small */
+    /* Links */
     .links a{
-      font-size: 11px;
+      font-size: var(--fz11);
       color:#111;
       text-decoration:none;
       border-bottom: 1px dashed rgba(0,0,0,.25);
     }
+    .list{ margin:0; padding-left: 18px; font-size: var(--fz12); line-height:1.65; color:#333; }
+    .list li{ margin:6px 0; }
     .links li{ margin:8px 0; }
 
-    /* Modal (tap block -> detail) */
+    /* Modal */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.35);
@@ -292,11 +460,11 @@
     }
     .modalBack.show{ display:flex; }
     .modal{
-      width: min(720px, 100%);
+      width: min(760px, 100%);
       background: rgba(255,255,255,.98);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.20);
+      border-radius: 20px;
+      box-shadow: 0 22px 52px rgba(0,0,0,.22);
       overflow:hidden;
     }
     .modalTop{
@@ -304,34 +472,37 @@
       align-items:center;
       justify-content:space-between;
       padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      background:
+        radial-gradient(circle, rgba(255,255,255,.92) 0 4px, rgba(255,255,255,0) 5px) 0 0/26px 26px,
+        linear-gradient(180deg, rgba(255,106,167,.22) 0%, rgba(255,255,255,.96) 80%);
     }
     .modalTop .mt{
       font-weight:1000;
-      font-size: 13px;
+      font-size: var(--fz13);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
     .x{
       appearance:none;
-      border:1px solid var(--line);
+      border:1px solid rgba(0,0,0,.10);
       background:#fff;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 8px 10px;
       font-weight:1000;
-      font-size: 12px;
+      font-size: var(--fz12);
     }
     .modalBody{
       padding: 12px 14px 14px;
-      font-size: 12.5px;
-      line-height:1.7;
-      color:#333;
+      font-size: var(--fz13);
+      line-height:1.75;
+      color:#222;
     }
     .modalBody ul{ margin:8px 0 0; padding-left: 18px; }
     .modalBody li{ margin:6px 0; }
 
-    /* Tools lock */
+    /* Tools lock (unchanged behavior) */
     .lockWrap{
       display:flex;
       flex-direction:column;
@@ -346,7 +517,7 @@
       max-width: 420px;
       border:1px solid rgba(0,0,0,.10);
       background: rgba(0,0,0,.03);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 16px 12px;
       font-size: 18px;
       font-weight: 1000;
@@ -368,8 +539,6 @@
       border-color: rgba(255,45,138,.35);
       box-shadow: 0 0 0 4px rgba(255,45,138,.12);
     }
-
-    /* Tools content */
     .toolGrid{
       display:grid;
       grid-template-columns: 1fr;
@@ -383,7 +552,7 @@
 <div class="wrap">
   <header>
     <div class="topRow">
-      <h1 class="h1">ミニーパルパルーザ</h1>
+      <h1 class="h1">ミニーパルパルーza</h1>
       <div class="topBtns">
         <button class="btn primary" id="btnNow">いま</button>
         <button class="btn" id="btnSwap">⇔</button>
@@ -403,9 +572,9 @@
     <div class="card" id="schedCard">
       <div class="cardInner" style="padding:0;">
         <div class="schedHead" id="schedHead">
-          <div id="hActual">実績（入力）</div>
-          <div></div>
           <div id="hPlan">予定（固定）</div>
+          <div></div>
+          <div id="hActual">実績（入力）</div>
         </div>
         <div class="schedBody" id="schedBody"></div>
       </div>
@@ -423,45 +592,57 @@
 
         <div class="subHead">アトラクション（候補15）</div>
         <div class="checkList" id="todoAttr"></div>
+
+        <div class="subHead">グリーティング / ごはん / その他</div>
+        <div class="checkList" id="todoPlus"></div>
       </div>
     </div>
   </section>
 
   <!-- 主要情報 -->
   <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
-    <div class="card">
-      <div class="cardInner">
-        <div class="sectionTitle">3月1日の予定</div>
-        <ul class="list" id="infoSchedule"></ul>
+    <div class="infoGrid">
+      <div class="infoCard">
+        <div class="sectionTitle">3/1 タイムライン</div>
+        <div class="krow"><div class="kleft">開園 / 閉園</div><div class="kright">9:00 / 21:00</div></div>
+        <div class="krow"><div class="kleft">ミニー＠ファンダーランド</div><div class="kright">13:00</div></div>
+        <div class="krow"><div class="kleft">ハーモニー・イン・カラー</div><div class="kright">15:40</div></div>
+        <div class="krow"><div class="kleft">Reach for the Stars</div><div class="kright">18:05</div></div>
+        <div class="krow"><div class="kleft">エレクトリカルパレード</div><div class="kright">19:10</div></div>
+        <div class="krow"><div class="kleft">花火</div><div class="kright">20:25</div></div>
+        <div class="tag pal">城の環境演出（ミニー）18:45 / 19:55 / 20:40</div>
+        <div class="tag aqua">“いま”ボタン：近い時間帯へ移動</div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="cardInner">
-        <div class="sectionTitle">エントリー受付対象（3/1）</div>
-        <ul class="list" id="infoEntry"></ul>
+      <div class="infoCard">
+        <div class="sectionTitle">エントリー受付（3/1）</div>
+        <div class="krow"><div class="kleft">ジャンボリ</div><div class="kright">12:45 / 14:00 / 15:15 / 17:10 / 18:25</div></div>
+        <div class="krow"><div class="kleft">クラブマウスビート</div><div class="kright">13:45 / 15:10 / 17:15 / 18:40</div></div>
+        <div class="krow"><div class="kleft">マジカルミュージックワールド</div><div class="kright">13:50 / 15:15 / 17:20 / 18:45</div></div>
+        <div class="muted" style="margin-top:10px;">
+          申し込みは入園後すぐ（アプリの「プラン」→「エントリー受付」）。
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="cardInner">
+      <div class="infoCard">
         <div class="sectionTitle">休止（3/1）</div>
-        <ul class="list" id="infoStop"></ul>
-        <div class="muted" style="margin-top:10px;">※当日変更の可能性があるので、最終確認は公式の休止情報。</div>
+        <ul class="list" style="margin-top:6px;">
+          <li>スイスファミリー・ツリーハウス</li>
+          <li>空飛ぶダンボ</li>
+          <li>美女と野獣“魔法のものがたり”</li>
+          <li>ミッキーのフィルハーマジック</li>
+          <li>ロジャーラビットのカートゥーンスピン</li>
+          <li>（ショー）レッツ・パーティグラ！</li>
+        </ul>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="cardInner">
+      <div class="infoCard">
         <div class="sectionTitle">PP（プライオリティパス）</div>
-        <div class="muted" id="ppExplain"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="cardInner">
-        <div class="sectionTitle">リンク（小さく）</div>
-        <ul class="list links" id="infoLinks"></ul>
+        <div class="muted" style="margin-top:2px;">
+          • 指定された時間に短い待ち時間で施設を利用できる（アプリで取得）。<br>
+          • 次のPP取得：取得から120分後 or 利用開始時刻（早い方）以降。<br>
+          • 対象（ランド）：ビッグサンダー／プー／ホーンテッド／スター・ツアーズ／モンスターズ（全5）。<br>
+        </div>
       </div>
     </div>
   </section>
@@ -470,38 +651,33 @@
   <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
     <div class="card">
       <div class="cardInner">
-        <div class="sectionTitle">公式</div>
-        <ul class="list links">
-          <li><a href="https://www.tokyodisneyresort.jp/treasure/minniesfunderland2026/goods.html" target="_blank" rel="noopener">スペシャルグッズ（ミニーのファンダーランド）</a></li>
-        </ul>
+        <div class="sectionTitle">残ってる可能性（メモ）</div>
+
+        <!--
+          ②超重要：リンクを載せたから満足は禁止。
+          このページ内（コード内）に「残ってる可能性のあるもの」を必ず明記すること。
+          リンクはサブ情報に過ぎない。
+        -->
+
+        <div class="muted" style="margin-bottom:10px;">
+          これは「2/27 14:00時点のアプリ転記」等を参照して作った“候補メモ”です。最終は当日アプリ。
+        </div>
+
+        <ul class="list" id="goodsLikelyList"></ul>
+
         <div class="muted" style="margin-top:10px;">
-          販売開始日：2026/1/13（公式）／販売形態や入店ルールは当日アプリで変動。
+          目標：このリストの中で「欲しい順」を上から。見つけたら即回収。
         </div>
       </div>
     </div>
 
     <div class="card">
       <div class="cardInner">
-        <div class="sectionTitle">正式名称リスト（ブログ）</div>
+        <div class="sectionTitle">リンク（サブ情報）</div>
         <ul class="list links">
-          <li><a href="https://mezzomiki.jp/post-325355/" target="_blank" rel="noopener">MezzoMiki：グッズ一覧（名称・価格・店舗）</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="cardInner">
-        <div class="sectionTitle">「残ってる可能性」メモ（ブログ）</div>
-        <ul class="list links">
-          <li><a href="https://ddtrip.jp/tdl-funderland-goods/" target="_blank" rel="noopener">DDtrip：2/27 14:00時点（公式アプリ転記の表）</a></li>
-        </ul>
-
-        <div class="muted" style="margin-top:10px; font-weight:900; color:#333;">その表に載ってる“名称”例（リンク先で確認）</div>
-        <ul class="list" style="margin-top:6px;">
-          <li>ハートフルリング</li>
-          <li>カチューシャ</li>
-          <li>キャップ</li>
-          <li>スマートフォンアクセサリー（ストラップ付）</li>
+          <li><a href="https://www.tokyodisneyresort.jp/treasure/minniesfunderland2026/goods.html" target="_blank" rel="noopener">公式：スペシャルグッズ（ミニーのファンダーランド）</a></li>
+          <li><a href="https://mezzomiki.jp/post-325355/" target="_blank" rel="noopener">MezzoMiki：名称・価格・店舗（一覧）</a></li>
+          <li><a href="https://ddtrip.jp/tdl-funderland-goods/" target="_blank" rel="noopener">DDtrip：2/27 14:00時点（公式アプリ転記）</a></li>
         </ul>
       </div>
     </div>
@@ -541,9 +717,7 @@
                   </label>
                   <button class="btn" id="btnReset">Reset</button>
                 </div>
-                <div class="muted" style="margin-top:10px;">
-                  GitHub運用：Export→JSONをコミット、でOK。
-                </div>
+                <div class="muted" style="margin-top:10px;">GitHub運用：Export→JSONをコミット。</div>
               </div>
             </div>
 
@@ -575,7 +749,7 @@
 
 <script>
 (() => {
-  // ---------------- Tabs ----------------
+  // Tabs
   const tabButtons = Array.from(document.querySelectorAll(".tabBtn"));
   const panels = Array.from(document.querySelectorAll(".panel"));
   tabButtons.forEach(btn => {
@@ -588,8 +762,8 @@
     });
   });
 
-  // ---------------- Storage ----------------
-  const KEY = "minipal_shiori_v12_20260301";
+  // Storage
+  const KEY = "minipal_shiori_v14_20260301";
   const mem = {};
   const getAll = () => {
     try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
@@ -600,111 +774,148 @@
     catch { mem[KEY] = obj; }
   };
 
-  // ---------------- Schedule (hourly base 08-21) ----------------
+  // Schedule base
   const hours = [];
   for (let h=8; h<=21; h++) hours.push(h);
 
-  // Plan blocks: only fixed-time stuff in schedule (per request)
-  // Palpal-related: strong pink; others: thin/neutral
+  // Plan blocks — each has one-sentence summary for on-card display
   const planBlocks = [
-    // Parade wait (pal)
     {
-      at:"12:10", hour:12,
-      cls:"pal",
-      title:"場所取り開始（50分前）",
+      at:"12:10", title:"場所取り開始（50分前）", cls:"pal",
+      summary:"目安50分前。最前不要＋トゥモ側想定で“座って安定”。",
       detail:[
         "目安：50分前（混雑C＋最前不要＋トゥモ側想定で“座って安定”）。",
         "35〜40分前：成立しやすいが列が深くなりやすい。",
         "60分前：快適（トイレ/飲み物込みでも崩れにくい）。",
-        "場所：トゥモローランド側のルート沿い（プラズマ・レイズ周辺〜スター・ツアーズ寄り）を目安。"
+        "場所：トゥモローランド側（プラズマ・レイズ周辺〜スター・ツアーズ寄り）を目安。"
       ]
     },
-    // Minnie parade (pal)
     {
-      at:"13:00", hour:13,
-      cls:"pal",
-      title:"ミニー＠ファンダーランド（約40分）",
+      at:"13:00", title:"ミニー＠ファンダーランド（約40分）", cls:"pal",
+      summary:"本編回収。終わったら“余韻フォト1枚”だけ。",
       detail:[
-        "終わったら余韻フォトを1枚だけ入れると満足度が上がる。"
+        "目的：パルパルの“本編回収”。",
+        "観覧：最前不要なら視界優先でOK。",
+        "終了後：余韻フォトは「1枚だけ」決めると満足度が上がる。"
       ]
     },
-    // Harmony
     {
-      at:"15:40", hour:15,
-      cls:"soft",
-      title:"ハーモニー・イン・カラー"
+      at:"15:40", title:"ディズニー・ハーモニー・イン・カラー", cls:"soft",
+      summary:"日中パレード。余裕があれば“気分転換”で拾う。",
+      detail:[
+        "日中パレード枠。時間が合えば“気分転換”として優秀。",
+        "固定しすぎず、余裕があれば拾う運用でもOK。"
+      ]
     },
-    // Reach for the Stars
     {
-      at:"18:05", hour:18,
-      cls:"soft",
-      title:"Reach for the Stars"
+      at:"18:05", title:"Reach for the Stars", cls:"soft",
+      summary:"夜ショー。優先度低なら“近くにいたら拾う”。",
+      detail:[
+        "夜のショー枠。優先度が低ければ“見送っても損が小さい”。",
+        "ただし城前の雰囲気は良いので、近くにいたら拾う。"
+      ]
     },
-    // Castle environment (pal)
     {
-      at:"18:45", hour:18,
-      cls:"pal",
-      title:"城の環境演出（ミニー）"
+      at:"18:45", title:"城の環境演出（ミニー）", cls:"pal",
+      summary:"ミニー演出。通りがかりで見られたら勝ち。",
+      detail:[
+        "ミニーの雰囲気演出。時間ピンポイントで近くにいたら拾う。",
+        "混雑は状況次第なので“通りがかりで見る”が最も軽い。"
+      ]
     },
-    // Electrical parade
     {
-      at:"19:10", hour:19,
-      cls:"soft",
-      title:"エレクトリカルパレード"
+      at:"19:10", title:"エレクトリカルパレード", cls:"soft",
+      summary:"夜パレード。観るなら早めに立ち位置を軽く確保。",
+      detail:[
+        "夜パレード枠。観るなら早めに立ち位置を軽く確保。",
+        "優先度が低いなら、遠目で雰囲気だけでもOK。"
+      ]
     },
-    // Castle environment (pal)
     {
-      at:"19:55", hour:19,
-      cls:"pal",
-      title:"城の環境演出（ミニー）"
+      at:"19:55", title:"城の環境演出（ミニー）", cls:"pal",
+      summary:"ミニー演出（夜）。通りがかりでOK。",
+      detail:[
+        "ミニーの雰囲気演出（夜）。",
+        "“通りがかりで見る”で十分成立する。"
+      ]
     },
-    // Fireworks
     {
-      at:"20:25", hour:20,
-      cls:"soft",
-      title:"花火（スカイ・フル・オブ・カラーズ）"
+      at:"20:25", title:"花火", cls:"soft",
+      summary:"視界が開ける場所なら強い。優先度低なら移動中でOK。",
+      detail:[
+        "花火枠。視界が開けた場所なら満足度が高い。",
+        "優先度低めなら、移動中に見える範囲でOK。"
+      ]
     },
-    // Castle environment (pal)
     {
-      at:"20:40", hour:20,
-      cls:"pal",
-      title:"城の環境演出（ミニー）"
+      at:"20:40", title:"城の環境演出（ミニー）", cls:"pal",
+      summary:"終盤の余韻として拾えると良い。",
+      detail:[
+        "ミニーの雰囲気演出（終盤）。",
+        "締めの余韻として拾えると良い。"
+      ]
     },
-    // Close
-    { at:"21:00", hour:21, cls:"soft", title:"閉園" }
+    {
+      at:"21:00", title:"閉園", cls:"soft",
+      summary:"撤収ピーク回避なら少し早めに出口へ。",
+      detail:[
+        "撤収のピークを避けたいなら、少し早めに出口方向へ。",
+        "お土産が残っていれば“最後の回収”の時間。"
+      ]
+    }
   ];
 
-  // Actual rows: one per hour
-  function hourId(h){ return `H${String(h).padStart(2,"0")}`; }
+  // Goods: "what remains" in-code list (best-effort memo)
+  const goodsLikely = [
+    "ハートフルリング（残ってる可能性）",
+    "カチューシャ（残ってる可能性）",
+    "キャップ（残ってる可能性）",
+    "スマートフォンアクセサリー（ストラップ付）（残ってる可能性）"
+  ];
 
-  // ---------------- Modal ----------------
+  // Helpers
+  function parseAt(at){
+    const [hh,mm] = at.split(":").map(Number);
+    return { hh, mm };
+  }
+  function hourId(h){ return `H${String(h).padStart(2,"0")}`; }
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function hash(str){
+    let h = 0;
+    for (let i=0;i<str.length;i++){
+      h = (h<<5) - h + str.charCodeAt(i);
+      h |= 0;
+    }
+    return Math.abs(h).toString(36);
+  }
+
+  // Modal
   const modalBack = document.getElementById("modalBack");
   const modalTitle = document.getElementById("modalTitle");
   const modalBody  = document.getElementById("modalBody");
   const modalClose = document.getElementById("modalClose");
-
   function openModal(title, lines){
     modalTitle.textContent = title;
-    if (!lines || !lines.length){
-      modalBody.innerHTML = `<div class="muted">（情報なし）</div>`;
-    } else {
-      modalBody.innerHTML = `<ul>${lines.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
-    }
+    modalBody.innerHTML = `<ul>${(lines||[]).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
     modalBack.classList.add("show");
   }
   function closeModal(){ modalBack.classList.remove("show"); }
   modalClose.addEventListener("click", closeModal);
-  modalBack.addEventListener("click", (e) => {
-    if (e.target === modalBack) closeModal();
-  });
+  modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
 
-  // ---------------- Render schedule ----------------
+  // Schedule render
+  const schedCard = document.getElementById("schedCard");
   const schedBody = document.getElementById("schedBody");
-  const schedHead = document.getElementById("schedHead");
-  const hActual = document.getElementById("hActual");
   const hPlan = document.getElementById("hPlan");
-
-  let swapped = false; // default: Actual(left) | Time | Plan(right)
+  const hActual = document.getElementById("hActual");
+  let swapped = false; // default Plan LEFT, Actual RIGHT
 
   function renderSchedule(){
     const all = getAll();
@@ -719,12 +930,39 @@
       row.className = "hourRow";
       row.dataset.h = String(h);
 
-      const timeLabel = `${String(h).padStart(2,"0")}:00`;
-      const blocks = planBlocks.filter(b => b.hour === h);
+      // Time
+      const timeCell = document.createElement("div");
+      timeCell.className = "timeCell timeCol";
+      timeCell.textContent = `${String(h).padStart(2,"0")}:00`;
+
+      // Plan cell (packed list, sorted by minutes)
+      const planCell = document.createElement("div");
+      planCell.className = "cell plan planCol";
+      planCell.innerHTML = `<div class="bar"></div><div class="vtrack"></div>`;
+      const vtrack = planCell.querySelector(".vtrack");
+
+      const eventsThisHour = planBlocks
+        .filter(pb => parseAt(pb.at).hh === h)
+        .sort((a,b) => parseAt(a.at).mm - parseAt(b.at).mm);
+
+      // no useless blanks: if none, keep vtrack empty (small)
+      eventsThisHour.forEach(ev => {
+        const div = document.createElement("div");
+        div.className = `ev ${ev.cls || ""}`;
+        div.innerHTML = `
+          <div class="evTop">
+            <div class="evTime">${escapeHtml(ev.at)}</div>
+            <div class="evTitle">${escapeHtml(ev.title)}</div>
+          </div>
+          <div class="evSum">${escapeHtml(ev.summary || "")}</div>
+        `;
+        div.addEventListener("click", () => openModal(`${ev.at} ${ev.title}`, ev.detail));
+        vtrack.appendChild(div);
+      });
 
       // Actual cell
       const actualCell = document.createElement("div");
-      actualCell.className = "cell";
+      actualCell.className = "cell actual actualCol";
       actualCell.innerHTML = `
         <div class="bar"></div>
         <div class="actualWrap">
@@ -733,37 +971,7 @@
         </div>
       `;
 
-      // Plan cell
-      const planCell = document.createElement("div");
-      planCell.className = "cell";
-      planCell.innerHTML = `<div class="bar"></div><div class="planArea"></div>`;
-      const planArea = planCell.querySelector(".planArea");
-
-      blocks.forEach(b => {
-        const div = document.createElement("div");
-        div.className = `block ${b.cls || ""}`;
-        div.innerHTML = `
-          <div class="left">
-            <div class="t">${escapeHtml(b.at)}　${escapeHtml(b.title)}</div>
-          </div>
-        `;
-
-        // click => modal if detail exists
-        div.addEventListener("click", () => {
-          if (b.detail && b.detail.length){
-            openModal(`${b.at} ${b.title}`, b.detail);
-          }
-        });
-
-        planArea.appendChild(div);
-      });
-
-      // Time cell
-      const timeCell = document.createElement("div");
-      timeCell.className = "timeCell";
-      timeCell.textContent = timeLabel;
-
-      // Save handlers
+      // save
       actualCell.querySelectorAll("[data-k]").forEach(el => {
         const k = el.dataset.k;
         const handler = () => {
@@ -777,41 +985,35 @@
         el.addEventListener("change", handler);
       });
 
-      // Compose row (swap supported)
+      // compose
       if (!swapped){
-        // Actual | Time | Plan
-        row.appendChild(actualCell);
-        row.appendChild(timeCell);
         row.appendChild(planCell);
+        row.appendChild(timeCell);
+        row.appendChild(actualCell);
+        hPlan.textContent = "予定（固定）";
+        hActual.textContent = "実績（入力）";
+        schedCard.classList.remove("swap");
       } else {
-        // Plan | Time | Actual
-        row.appendChild(planCell);
-        row.appendChild(timeCell);
         row.appendChild(actualCell);
+        row.appendChild(timeCell);
+        row.appendChild(planCell);
+        hPlan.textContent = "実績（入力）";
+        hActual.textContent = "予定（固定）";
+        schedCard.classList.add("swap");
       }
 
       schedBody.appendChild(row);
     });
 
     setAll(all);
-    // refresh header labels
-    if (!swapped){
-      hActual.textContent = "実績（入力）";
-      hPlan.textContent = "予定（固定）";
-    } else {
-      hActual.textContent = "予定（固定）";
-      hPlan.textContent = "実績（入力）";
-    }
   }
 
-  // Now highlight nearest hour row
+  // Now highlight nearest hour
   function highlightNow(){
     const rows = Array.from(document.querySelectorAll(".hourRow"));
     rows.forEach(r => r.classList.remove("now"));
-
     const now = new Date();
     const curH = now.getHours();
-    // find nearest within our range
     let best = null;
     let bestDiff = Infinity;
     rows.forEach(r => {
@@ -824,14 +1026,13 @@
       best.scrollIntoView({behavior:"smooth", block:"center"});
     }
   }
-
   document.getElementById("btnNow").addEventListener("click", highlightNow);
   document.getElementById("btnSwap").addEventListener("click", () => {
     swapped = !swapped;
     renderSchedule();
   });
 
-  // ---------------- Todo lists ----------------
+  // Todo lists
   const todoPal = [
     { id:"pal_deco", text:"パルパル：デコ探索" },
     { id:"pal_goods", text:"パルパル：グッズ回収" },
@@ -843,16 +1044,15 @@
     { id:"do_game", text:"ボール転がすゲーム（ジャングルカーニバル）" },
     { id:"do_haunted_goods", text:"ホーンテッドグッズ探索（見つけたら確保）" },
   ];
-  // Attractions (exclude: B&B / Dumbo / Swiss / Philhar / Roger / Space / Buzz)
   const todoAttr = [
     "プーさんのハニーハント（PP）",
     "モンスターズ・インク“ライド＆ゴーシーク！”（PP）",
     "ホーンテッドマンション（PP）",
-    "スター・ツアーズ：ザ・アドベンチャーズ・コンティニュー（PP）",
+    "スター・ツアーズ（PP）",
     "ビッグサンダー・マウンテン（PP）",
     "スプラッシュ・マウンテン",
     "カリブの海賊",
-    "ジャングルクルーズ：ワイルドライフ・エクスペディション",
+    "ジャングルクルーズ",
     "ウエスタンリバー鉄道",
     "蒸気船マークトウェイン号",
     "イッツ・ア・スモールワールドwithグルート",
@@ -860,6 +1060,19 @@
     "白雪姫と七人のこびと",
     "ピノキオの冒険旅行",
     "キャッスルカルーセル"
+  ];
+  const todoPlus = [
+    "ミニーのスタイルスタジオ（グリ）",
+    "ミッキーの家とミート・ミッキー（グリ）",
+    "ウッドチャック・グリーティングトレイル（グリ）",
+    "トゥーンタウン周辺のグリ（出会えたら）",
+    "昼：軽食（スウィートハート・カフェ系）",
+    "昼：しっかり（クイーン・オブ・ハート／ハングリーベア系）",
+    "夜：しっかり（ベイマックス周辺 or ワールドバザール周辺）",
+    "夜：軽め（ホットドッグ/ポップコーン等）",
+    "ショップ：パルパル以外のお土産回収",
+    "フォト：ワールドバザールで1枚",
+    "休憩：カフェ/座れる場所で10分回復"
   ];
 
   function renderChecklist(elId, items, namespace){
@@ -894,59 +1107,11 @@
     setAll(all);
   }
 
-  // ---------------- Info page (embed times, no inline links) ----------------
-  // Values are hard-coded from official 2026-03-01 daily calendar page.
-  const infoSchedule = [
-    "開園：9:00 / 閉園：21:00",
-    "ミニー＠ファンダーランド：13:00",
-    "ディズニー・ハーモニー・イン・カラー：15:40",
-    "Reach for the Stars：18:05",
-    "東京ディズニーランド・エレクトリカルパレード・ドリームライツ：19:10",
-    "花火（スカイ・フル・オブ・カラーズ）：20:25",
-    "シンデレラ城の環境演出（ミニーのファンダーランド）：18:45 / 19:55 / 20:40"
-  ];
-  const infoEntry = [
-    "ジャンボリミッキー！レッツ・ダンス！：12:45 / 14:00 / 15:15 / 17:10 / 18:25",
-    "クラブマウスビート：13:45 / 15:10 / 17:15 / 18:40",
-    "ミッキーのマジカルミュージックワールド：13:50 / 15:15 / 17:20 / 18:45"
-  ];
-  const infoStop = [
-    "スイスファミリー・ツリーハウス",
-    "空飛ぶダンボ",
-    "美女と野獣“魔法のものがたり”",
-    "ミッキーのフィルハーマジック",
-    "ロジャーラビットのカートゥーンスピン",
-    "（ショー）レッツ・パーティグラ！"
-  ];
+  // Goods list render
+  const goodsUl = document.getElementById("goodsLikelyList");
+  goodsUl.innerHTML = goodsLikely.map(x => `<li>${escapeHtml(x)}</li>`).join("");
 
-  function fillList(ulId, arr){
-    const ul = document.getElementById(ulId);
-    ul.innerHTML = arr.map(x => `<li>${escapeHtml(x)}</li>`).join("");
-  }
-  fillList("infoSchedule", infoSchedule);
-  fillList("infoEntry", infoEntry);
-  fillList("infoStop", infoStop);
-
-  // PP explanation (official wording paraphrase, no inline links)
-  document.getElementById("ppExplain").innerHTML =
-    [
-      "指定された時間に短い待ち時間で施設を利用できるサービス（アプリで取得）。",
-      "次のPP取得：取得から120分後 もしくは 取得したPPの利用開始時刻の早い方を過ぎたら取得可能。",
-      "対象（ランド）：ビッグサンダー／プーさん／ホーンテッド／スター・ツアーズ／モンスターズ（全5）"
-    ].map(x => `• ${escapeHtml(x)}`).join("<br>");
-
-  // Links (small)
-  const linkData = [
-    { t:"3/1（日）日次カレンダー", u:"https://www.tokyodisneyresort.jp/tdl/daily/calendar/20260301/" },
-    { t:"休止情報", u:"https://www.tokyodisneyresort.jp/tdl/monthly/stop.html" },
-    { t:"プライオリティパス", u:"https://www.tokyodisneyresort.jp/tdr/guide/app_service/prioritypass.html" },
-    { t:"エントリー受付", u:"https://www.tokyodisneyresort.jp/tdr/guide/app_service/entry.html" },
-    { t:"パルパル公式グッズ", u:"https://www.tokyodisneyresort.jp/treasure/minniesfunderland2026/goods.html" }
-  ];
-  const infoLinks = document.getElementById("infoLinks");
-  infoLinks.innerHTML = linkData.map(x => `<li><a href="${x.u}" target="_blank" rel="noopener">${escapeHtml(x.t)}</a></li>`).join("");
-
-  // ---------------- Tools lock (5 taps) ----------------
+  // Tools lock (keep)
   const unlockBtn = document.getElementById("unlockBtn");
   const dots = document.getElementById("dots");
   const toolLocked = document.getElementById("toolLocked");
@@ -975,27 +1140,25 @@
   function openTools(){
     toolLocked.style.display = "none";
     toolOpen.style.display = "block";
-    initTools(); // lazy init
+    initTools();
   }
   function lockTools(){
     toolLocked.style.display = "block";
     toolOpen.style.display = "none";
   }
 
-  // ---------------- Tools content ----------------
   let toolsInited = false;
   function initTools(){
     if (toolsInited) return;
     toolsInited = true;
 
-    // PP log inputs
     const ppLogArea = document.getElementById("ppLogArea");
     const all = getAll();
     all.pp = all.pp || {};
     for (let i=1;i<=5;i++){
       if (all.pp[i] === undefined) all.pp[i] = "";
       const inp = document.createElement("input");
-      inp.className = "actual"; // reuse styling
+      inp.className = "actual";
       inp.setAttribute("inputmode","text");
       inp.placeholder = `PP${i}`;
       inp.value = all.pp[i];
@@ -1009,7 +1172,6 @@
     }
     setAll(all);
 
-    // Export / Import / Reset
     document.getElementById("btnExport").addEventListener("click", () => {
       const data = getAll();
       const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
@@ -1029,12 +1191,11 @@
       const txt = await f.text();
       const obj = JSON.parse(txt);
       setAll(obj);
-      // rerender key parts
       renderSchedule();
       renderChecklist("todoPal", todoPal, "pal");
       renderChecklist("todoDo", todoDo, "do");
       renderChecklist("todoAttr", todoAttr, "attr");
-      // unlock state restore
+      renderChecklist("todoPlus", todoPlus, "plus");
       const u = getUnlock();
       renderDots(u.n || 0);
       alert("Importしました");
@@ -1047,18 +1208,10 @@
       location.reload();
     });
 
-    // Copy
     document.getElementById("btnCopy").addEventListener("click", async () => {
       const a = getAll();
       const lines = [];
       lines.push("【ミニーパルパルーザ｜ログ】");
-      lines.push("");
-      lines.push("PP:");
-      if (a.pp){
-        for (let i=1;i<=5;i++){
-          lines.push(`- PP${i}: ${(a.pp[i]||"").trim()}`);
-        }
-      }
       lines.push("");
       lines.push("実績（時間ごと）:");
       hours.forEach(h => {
@@ -1067,13 +1220,6 @@
         const mark = rec.done ? "✓" : " ";
         lines.push(`[${mark}] ${String(h).padStart(2,"0")}:00 ${(rec.text||"").trim()}`);
       });
-      lines.push("");
-      lines.push("Todo:");
-      const todos = a.todo || {};
-      Object.keys(todos).forEach(k => {
-        if (todos[k]) lines.push(`- ${k}`);
-      });
-
       const text = lines.join("\n").trim();
       try{
         await navigator.clipboard.writeText(text);
@@ -1090,7 +1236,6 @@
     });
   }
 
-  // ---------------- Unlock button handler ----------------
   const u0 = getUnlock();
   renderDots(u0.n || 0);
   if (u0.open) openTools(); else lockTools();
@@ -1104,31 +1249,12 @@
     if (open) openTools();
   });
 
-  // ---------------- Helpers ----------------
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-  function hash(str){
-    // small stable hash for string ids
-    let h = 0;
-    for (let i=0;i<str.length;i++){
-      h = (h<<5) - h + str.charCodeAt(i);
-      h |= 0;
-    }
-    return Math.abs(h).toString(36);
-  }
-
-  // ---------------- Init main ----------------
+  // Init
   renderSchedule();
   renderChecklist("todoPal", todoPal, "pal");
   renderChecklist("todoDo", todoDo, "do");
   renderChecklist("todoAttr", todoAttr, "attr");
-
+  renderChecklist("todoPlus", todoPlus, "plus");
 })();
 </script>
 </body>
