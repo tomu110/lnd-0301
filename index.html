@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ミニーパルパルーザ｜しおり（2026-03-01）</title>
+
+  <style>
+    :root{
+      --pink:#ff2d8a;         /* パルパル濃 */
+      --pink2:#ff0f74;
+      --pinkSoft:#ffe3f0;     /* 中間（薄ピンク） */
+      --bg:#fff7fb;
+      --card:#ffffff;
+      --ink:#111;
+      --muted:#6a6a6a;
+      --line:rgba(0,0,0,.08);
+      --shadow:0 10px 24px rgba(0,0,0,.08);
+      --r:16px;
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+      background: radial-gradient(1100px 650px at 10% 0%, rgba(255,45,138,.14) 0%, rgba(255,255,255,0) 55%), var(--bg);
+      color:var(--ink);
+      -webkit-text-size-adjust:100%;
+    }
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding: env(safe-area-inset-top) 12px env(safe-area-inset-bottom) 16px;
+    }
+
+    /* Header: title + (now, swap) only */
+    header{ padding:12px 4px 8px; }
+    .topRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .h1{
+      margin:0;
+      font-size:18px;
+      font-weight:1000;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .topBtns{ display:flex; gap:8px; flex:0 0 auto; }
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius: 12px;
+      font-size:12px;
+      font-weight:1000;
+      color:#222;
+    }
+    .btn.primary{
+      border:none;
+      background: linear-gradient(180deg, var(--pink) 0%, var(--pink2) 100%);
+      color:#fff;
+      box-shadow: 0 12px 22px rgba(255,45,138,.22);
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    /* Tabs */
+    .tabs{
+      position: sticky;
+      top: env(safe-area-inset-top);
+      z-index: 20;
+      margin: 10px 0 12px;
+      padding: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow);
+      display:flex; gap:8px; overflow:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    .tabBtn{
+      appearance:none; border:none; background:transparent;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px; font-weight: 1000;
+      color:#333; white-space:nowrap;
+    }
+    .tabBtn[aria-selected="true"]{
+      background: linear-gradient(180deg, var(--pink) 0%, var(--pink2) 100%);
+      color:#fff;
+      box-shadow: 0 12px 22px rgba(255,45,138,.25);
+    }
+    .panel{ display:none; }
+    .panel.active{ display:block; }
+
+    /* Cards */
+    .card{
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      margin: 12px 0;
+    }
+    .cardInner{ padding: 14px; }
+    .sectionTitle{ margin:0 0 10px; font-size:14px; font-weight:1000; }
+
+    /* Schedule grid: Actual | Time | Plan */
+    .schedHead{
+      display:grid;
+      grid-template-columns: 1fr 82px 1fr;
+      gap:8px;
+      padding: 12px 12px 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .schedBody{
+      padding: 10px 12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .hourRow{
+      display:grid;
+      grid-template-columns: 1fr 82px 1fr;
+      gap:8px;
+      align-items:stretch;
+    }
+
+    .timeCell{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.9);
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-size: 12px;
+      font-weight: 1000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .cell{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      border-radius: 14px;
+      padding: 10px 10px;
+      position:relative;
+      min-height: 52px;
+      overflow:hidden;
+    }
+    .cell .bar{
+      position:absolute; left:0; top:0; bottom:0; width:6px;
+      background: rgba(0,0,0,.04);
+    }
+
+    /* Actual input (left) */
+    .actualWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding-left: 8px;
+    }
+    .actualWrap input[type="checkbox"]{
+      width:18px; height:18px; accent-color: var(--pink);
+      flex:0 0 auto;
+    }
+    .actual{
+      width:100%;
+      border:1px solid rgba(0,0,0,.12);
+      background:#fff;
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-size: 12px;
+      outline:none;
+    }
+
+    /* Plan blocks (right): only squares for actual event times */
+    .planArea{
+      padding-left: 8px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .block{
+      border:1px solid rgba(0,0,0,.10);
+      border-radius: 12px;
+      padding: 10px 10px;
+      background: rgba(0,0,0,.02); /* 通常は薄い */
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .block .left{
+      min-width:0;
+    }
+    .block .t{
+      font-size:12px;
+      font-weight:1000;
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .block .s{
+      font-size:11px;
+      color: var(--muted);
+      font-weight:900;
+      margin-top:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    /* Color rules */
+    .block.pal{
+      background: rgba(255,45,138,.10);
+      border-color: rgba(255,45,138,.28);
+      box-shadow: 0 10px 18px rgba(255,45,138,.10);
+    }
+    .block.pal .t{ color:#7a0034; }
+    .block.pal .s{ color:#8a2450; }
+
+    .block.soft{
+      background: rgba(255,45,138,.05);
+      border-color: rgba(255,45,138,.16);
+    }
+
+    /* Now highlight */
+    .hourRow.now .timeCell,
+    .hourRow.now .cell{
+      outline: 2px solid rgba(255,45,138,.22);
+      box-shadow: 0 16px 30px rgba(255,45,138,.12);
+    }
+
+    /* Todo list */
+    .checkList{ display:flex; flex-direction:column; gap:10px; }
+    .checkItem{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 10px;
+      border:1px solid rgba(255,45,138,.16);
+      background: rgba(255,45,138,.06);
+      border-radius: 14px;
+    }
+    .checkItem input{ width:20px; height:20px; accent-color: var(--pink); }
+    .checkItem .txt{
+      font-size: 13px;
+      font-weight: 1000;
+      color:#7a0034;
+      line-height:1.3;
+    }
+
+    .subHead{
+      margin: 14px 0 10px;
+      font-size: 13px;
+      font-weight: 1000;
+      color:#333;
+    }
+
+    /* Info lists */
+    .list{ margin:0; padding-left: 18px; font-size: 12.5px; line-height:1.65; color:#333; }
+    .list li{ margin:6px 0; }
+    .muted{ color: var(--muted); font-size:12px; line-height:1.55; }
+
+    /* Links small */
+    .links a{
+      font-size: 11px;
+      color:#111;
+      text-decoration:none;
+      border-bottom: 1px dashed rgba(0,0,0,.25);
+    }
+    .links li{ margin:8px 0; }
+
+    /* Modal (tap block -> detail) */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.35);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index: 999;
+      padding: 14px;
+    }
+    .modalBack.show{ display:flex; }
+    .modal{
+      width: min(720px, 100%);
+      background: rgba(255,255,255,.98);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.20);
+      overflow:hidden;
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .modalTop .mt{
+      font-weight:1000;
+      font-size: 13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .x{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight:1000;
+      font-size: 12px;
+    }
+    .modalBody{
+      padding: 12px 14px 14px;
+      font-size: 12.5px;
+      line-height:1.7;
+      color:#333;
+    }
+    .modalBody ul{ margin:8px 0 0; padding-left: 18px; }
+    .modalBody li{ margin:6px 0; }
+
+    /* Tools lock */
+    .lockWrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding: 22px 10px;
+      text-align:center;
+    }
+    .lockBtn{
+      width:100%;
+      max-width: 420px;
+      border:1px solid rgba(0,0,0,.10);
+      background: rgba(0,0,0,.03);
+      border-radius: 16px;
+      padding: 16px 12px;
+      font-size: 18px;
+      font-weight: 1000;
+      user-select:none;
+    }
+    .dots{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.10);
+      background: rgba(0,0,0,.06);
+    }
+    .dot.on{
+      background: var(--pink);
+      border-color: rgba(255,45,138,.35);
+      box-shadow: 0 0 0 4px rgba(255,45,138,.12);
+    }
+
+    /* Tools content */
+    .toolGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    .toolBtnRow{ display:flex; gap:8px; flex-wrap:wrap; }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="topRow">
+      <h1 class="h1">ミニーパルパルーザ</h1>
+      <div class="topBtns">
+        <button class="btn primary" id="btnNow">いま</button>
+        <button class="btn" id="btnSwap">⇔</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="ページ切替">
+    <button class="tabBtn" role="tab" aria-selected="true"  aria-controls="p1" id="t1">スケジュール</button>
+    <button class="tabBtn" role="tab" aria-selected="false" aria-controls="p2" id="t2">主要情報</button>
+    <button class="tabBtn" role="tab" aria-selected="false" aria-controls="p3" id="t3">グッズ</button>
+    <button class="tabBtn" role="tab" aria-selected="false" aria-controls="p4" id="t4">ツール</button>
+  </nav>
+
+  <!-- メイン：スケジュール + Todo -->
+  <section class="panel active" id="p1" role="tabpanel" aria-labelledby="t1">
+    <div class="card" id="schedCard">
+      <div class="cardInner" style="padding:0;">
+        <div class="schedHead" id="schedHead">
+          <div id="hActual">実績（入力）</div>
+          <div></div>
+          <div id="hPlan">予定（固定）</div>
+        </div>
+        <div class="schedBody" id="schedBody"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">Todo（固定じゃないやつ）</div>
+
+        <div class="subHead">パルパル</div>
+        <div class="checkList" id="todoPal"></div>
+
+        <div class="subHead">やること</div>
+        <div class="checkList" id="todoDo"></div>
+
+        <div class="subHead">アトラクション（候補15）</div>
+        <div class="checkList" id="todoAttr"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主要情報 -->
+  <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">3月1日の予定</div>
+        <ul class="list" id="infoSchedule"></ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">エントリー受付対象（3/1）</div>
+        <ul class="list" id="infoEntry"></ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">休止（3/1）</div>
+        <ul class="list" id="infoStop"></ul>
+        <div class="muted" style="margin-top:10px;">※当日変更の可能性があるので、最終確認は公式の休止情報。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">PP（プライオリティパス）</div>
+        <div class="muted" id="ppExplain"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">リンク（小さく）</div>
+        <ul class="list links" id="infoLinks"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- グッズ -->
+  <section class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">公式</div>
+        <ul class="list links">
+          <li><a href="https://www.tokyodisneyresort.jp/treasure/minniesfunderland2026/goods.html" target="_blank" rel="noopener">スペシャルグッズ（ミニーのファンダーランド）</a></li>
+        </ul>
+        <div class="muted" style="margin-top:10px;">
+          販売開始日：2026/1/13（公式）／販売形態や入店ルールは当日アプリで変動。
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">正式名称リスト（ブログ）</div>
+        <ul class="list links">
+          <li><a href="https://mezzomiki.jp/post-325355/" target="_blank" rel="noopener">MezzoMiki：グッズ一覧（名称・価格・店舗）</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardInner">
+        <div class="sectionTitle">「残ってる可能性」メモ（ブログ）</div>
+        <ul class="list links">
+          <li><a href="https://ddtrip.jp/tdl-funderland-goods/" target="_blank" rel="noopener">DDtrip：2/27 14:00時点（公式アプリ転記の表）</a></li>
+        </ul>
+
+        <div class="muted" style="margin-top:10px; font-weight:900; color:#333;">その表に載ってる“名称”例（リンク先で確認）</div>
+        <ul class="list" style="margin-top:6px;">
+          <li>ハートフルリング</li>
+          <li>カチューシャ</li>
+          <li>キャップ</li>
+          <li>スマートフォンアクセサリー（ストラップ付）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ツール（5クリック解放） -->
+  <section class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
+    <div class="card">
+      <div class="cardInner" id="toolLocked">
+        <div class="lockWrap">
+          <div class="lockBtn" id="unlockBtn">🔒</div>
+          <div class="dots" id="dots"></div>
+        </div>
+      </div>
+
+      <div class="card" id="toolOpen" style="display:none;">
+        <div class="cardInner">
+          <div class="sectionTitle">ツール</div>
+
+          <div class="toolGrid">
+            <div class="card" style="margin:0;">
+              <div class="cardInner">
+                <div class="sectionTitle">PPログ（メモ）</div>
+                <div class="muted" style="margin:-6px 0 10px;">例：PP1 プー 10:20–11:20</div>
+                <div id="ppLogArea" style="display:flex; flex-direction:column; gap:10px;"></div>
+              </div>
+            </div>
+
+            <div class="card" style="margin:0;">
+              <div class="cardInner">
+                <div class="sectionTitle">Export / Import</div>
+                <div class="toolBtnRow">
+                  <button class="btn" id="btnExport">Export</button>
+                  <label class="btn" style="cursor:pointer;">
+                    Import
+                    <input id="importFile" type="file" accept="application/json" style="display:none;">
+                  </label>
+                  <button class="btn" id="btnReset">Reset</button>
+                </div>
+                <div class="muted" style="margin-top:10px;">
+                  GitHub運用：Export→JSONをコミット、でOK。
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin:0;">
+              <div class="cardInner">
+                <div class="sectionTitle">コピー（ログ）</div>
+                <button class="btn primary" id="btnCopy">コピー</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Modal -->
+<div class="modalBack" id="modalBack" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modalTop">
+      <div class="mt" id="modalTitle"></div>
+      <button class="x" id="modalClose">×</button>
+    </div>
+    <div class="modalBody" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------------- Tabs ----------------
+  const tabButtons = Array.from(document.querySelectorAll(".tabBtn"));
+  const panels = Array.from(document.querySelectorAll(".panel"));
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach(b => b.setAttribute("aria-selected","false"));
+      panels.forEach(p => p.classList.remove("active"));
+      btn.setAttribute("aria-selected","true");
+      document.getElementById(btn.getAttribute("aria-controls")).classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+
+  // ---------------- Storage ----------------
+  const KEY = "minipal_shiori_v12_20260301";
+  const mem = {};
+  const getAll = () => {
+    try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+    catch { return mem[KEY] || {}; }
+  };
+  const setAll = (obj) => {
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); }
+    catch { mem[KEY] = obj; }
+  };
+
+  // ---------------- Schedule (hourly base 08-21) ----------------
+  const hours = [];
+  for (let h=8; h<=21; h++) hours.push(h);
+
+  // Plan blocks: only fixed-time stuff in schedule (per request)
+  // Palpal-related: strong pink; others: thin/neutral
+  const planBlocks = [
+    // Parade wait (pal)
+    {
+      at:"12:10", hour:12,
+      cls:"pal",
+      title:"場所取り開始（50分前）",
+      detail:[
+        "目安：50分前（混雑C＋最前不要＋トゥモ側想定で“座って安定”）。",
+        "35〜40分前：成立しやすいが列が深くなりやすい。",
+        "60分前：快適（トイレ/飲み物込みでも崩れにくい）。",
+        "場所：トゥモローランド側のルート沿い（プラズマ・レイズ周辺〜スター・ツアーズ寄り）を目安。"
+      ]
+    },
+    // Minnie parade (pal)
+    {
+      at:"13:00", hour:13,
+      cls:"pal",
+      title:"ミニー＠ファンダーランド（約40分）",
+      detail:[
+        "終わったら余韻フォトを1枚だけ入れると満足度が上がる。"
+      ]
+    },
+    // Harmony
+    {
+      at:"15:40", hour:15,
+      cls:"soft",
+      title:"ハーモニー・イン・カラー"
+    },
+    // Reach for the Stars
+    {
+      at:"18:05", hour:18,
+      cls:"soft",
+      title:"Reach for the Stars"
+    },
+    // Castle environment (pal)
+    {
+      at:"18:45", hour:18,
+      cls:"pal",
+      title:"城の環境演出（ミニー）"
+    },
+    // Electrical parade
+    {
+      at:"19:10", hour:19,
+      cls:"soft",
+      title:"エレクトリカルパレード"
+    },
+    // Castle environment (pal)
+    {
+      at:"19:55", hour:19,
+      cls:"pal",
+      title:"城の環境演出（ミニー）"
+    },
+    // Fireworks
+    {
+      at:"20:25", hour:20,
+      cls:"soft",
+      title:"花火（スカイ・フル・オブ・カラーズ）"
+    },
+    // Castle environment (pal)
+    {
+      at:"20:40", hour:20,
+      cls:"pal",
+      title:"城の環境演出（ミニー）"
+    },
+    // Close
+    { at:"21:00", hour:21, cls:"soft", title:"閉園" }
+  ];
+
+  // Actual rows: one per hour
+  function hourId(h){ return `H${String(h).padStart(2,"0")}`; }
+
+  // ---------------- Modal ----------------
+  const modalBack = document.getElementById("modalBack");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalBody  = document.getElementById("modalBody");
+  const modalClose = document.getElementById("modalClose");
+
+  function openModal(title, lines){
+    modalTitle.textContent = title;
+    if (!lines || !lines.length){
+      modalBody.innerHTML = `<div class="muted">（情報なし）</div>`;
+    } else {
+      modalBody.innerHTML = `<ul>${lines.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+    }
+    modalBack.classList.add("show");
+  }
+  function closeModal(){ modalBack.classList.remove("show"); }
+  modalClose.addEventListener("click", closeModal);
+  modalBack.addEventListener("click", (e) => {
+    if (e.target === modalBack) closeModal();
+  });
+
+  // ---------------- Render schedule ----------------
+  const schedBody = document.getElementById("schedBody");
+  const schedHead = document.getElementById("schedHead");
+  const hActual = document.getElementById("hActual");
+  const hPlan = document.getElementById("hPlan");
+
+  let swapped = false; // default: Actual(left) | Time | Plan(right)
+
+  function renderSchedule(){
+    const all = getAll();
+    all.actual = all.actual || {};
+    schedBody.innerHTML = "";
+
+    hours.forEach(h => {
+      const id = hourId(h);
+      if (!all.actual[id]) all.actual[id] = { done:false, text:"" };
+
+      const row = document.createElement("div");
+      row.className = "hourRow";
+      row.dataset.h = String(h);
+
+      const timeLabel = `${String(h).padStart(2,"0")}:00`;
+      const blocks = planBlocks.filter(b => b.hour === h);
+
+      // Actual cell
+      const actualCell = document.createElement("div");
+      actualCell.className = "cell";
+      actualCell.innerHTML = `
+        <div class="bar"></div>
+        <div class="actualWrap">
+          <input type="checkbox" data-k="done" ${all.actual[id].done ? "checked":""}>
+          <input class="actual" data-k="text" inputmode="text" placeholder="（実績）" value="${escapeHtml(all.actual[id].text || "")}">
+        </div>
+      `;
+
+      // Plan cell
+      const planCell = document.createElement("div");
+      planCell.className = "cell";
+      planCell.innerHTML = `<div class="bar"></div><div class="planArea"></div>`;
+      const planArea = planCell.querySelector(".planArea");
+
+      blocks.forEach(b => {
+        const div = document.createElement("div");
+        div.className = `block ${b.cls || ""}`;
+        div.innerHTML = `
+          <div class="left">
+            <div class="t">${escapeHtml(b.at)}　${escapeHtml(b.title)}</div>
+          </div>
+        `;
+
+        // click => modal if detail exists
+        div.addEventListener("click", () => {
+          if (b.detail && b.detail.length){
+            openModal(`${b.at} ${b.title}`, b.detail);
+          }
+        });
+
+        planArea.appendChild(div);
+      });
+
+      // Time cell
+      const timeCell = document.createElement("div");
+      timeCell.className = "timeCell";
+      timeCell.textContent = timeLabel;
+
+      // Save handlers
+      actualCell.querySelectorAll("[data-k]").forEach(el => {
+        const k = el.dataset.k;
+        const handler = () => {
+          const a = getAll();
+          a.actual = a.actual || {};
+          a.actual[id] = a.actual[id] || {done:false, text:""};
+          a.actual[id][k] = (el.type === "checkbox") ? el.checked : el.value;
+          setAll(a);
+        };
+        el.addEventListener("input", handler);
+        el.addEventListener("change", handler);
+      });
+
+      // Compose row (swap supported)
+      if (!swapped){
+        // Actual | Time | Plan
+        row.appendChild(actualCell);
+        row.appendChild(timeCell);
+        row.appendChild(planCell);
+      } else {
+        // Plan | Time | Actual
+        row.appendChild(planCell);
+        row.appendChild(timeCell);
+        row.appendChild(actualCell);
+      }
+
+      schedBody.appendChild(row);
+    });
+
+    setAll(all);
+    // refresh header labels
+    if (!swapped){
+      hActual.textContent = "実績（入力）";
+      hPlan.textContent = "予定（固定）";
+    } else {
+      hActual.textContent = "予定（固定）";
+      hPlan.textContent = "実績（入力）";
+    }
+  }
+
+  // Now highlight nearest hour row
+  function highlightNow(){
+    const rows = Array.from(document.querySelectorAll(".hourRow"));
+    rows.forEach(r => r.classList.remove("now"));
+
+    const now = new Date();
+    const curH = now.getHours();
+    // find nearest within our range
+    let best = null;
+    let bestDiff = Infinity;
+    rows.forEach(r => {
+      const h = Number(r.dataset.h);
+      const diff = Math.abs(h - curH);
+      if (diff < bestDiff){ best = r; bestDiff = diff; }
+    });
+    if (best){
+      best.classList.add("now");
+      best.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  }
+
+  document.getElementById("btnNow").addEventListener("click", highlightNow);
+  document.getElementById("btnSwap").addEventListener("click", () => {
+    swapped = !swapped;
+    renderSchedule();
+  });
+
+  // ---------------- Todo lists ----------------
+  const todoPal = [
+    { id:"pal_deco", text:"パルパル：デコ探索" },
+    { id:"pal_goods", text:"パルパル：グッズ回収" },
+    { id:"pal_food", text:"パルパル：フード" },
+    { id:"pal_after", text:"パルパル：余韻（フォト1枚）" },
+  ];
+  const todoDo = [
+    { id:"do_entry", text:"エントリー受付（入園後）" },
+    { id:"do_game", text:"ボール転がすゲーム（ジャングルカーニバル）" },
+    { id:"do_haunted_goods", text:"ホーンテッドグッズ探索（見つけたら確保）" },
+  ];
+  // Attractions (exclude: B&B / Dumbo / Swiss / Philhar / Roger / Space / Buzz)
+  const todoAttr = [
+    "プーさんのハニーハント（PP）",
+    "モンスターズ・インク“ライド＆ゴーシーク！”（PP）",
+    "ホーンテッドマンション（PP）",
+    "スター・ツアーズ：ザ・アドベンチャーズ・コンティニュー（PP）",
+    "ビッグサンダー・マウンテン（PP）",
+    "スプラッシュ・マウンテン",
+    "カリブの海賊",
+    "ジャングルクルーズ：ワイルドライフ・エクスペディション",
+    "ウエスタンリバー鉄道",
+    "蒸気船マークトウェイン号",
+    "イッツ・ア・スモールワールドwithグルート",
+    "ピーターパン空の旅",
+    "白雪姫と七人のこびと",
+    "ピノキオの冒険旅行",
+    "キャッスルカルーセル"
+  ];
+
+  function renderChecklist(elId, items, namespace){
+    const root = document.getElementById(elId);
+    const all = getAll();
+    all.todo = all.todo || {};
+    root.innerHTML = "";
+
+    items.forEach(it => {
+      const id = typeof it === "string" ? `${namespace}_${hash(it)}` : it.id;
+      const text = typeof it === "string" ? it : it.text;
+      if (all.todo[id] === undefined) all.todo[id] = false;
+
+      const label = document.createElement("label");
+      label.className = "checkItem";
+      label.innerHTML = `
+        <input type="checkbox" data-t="${escapeHtml(id)}" ${all.todo[id] ? "checked":""}>
+        <div class="txt">${escapeHtml(text)}</div>
+      `;
+      root.appendChild(label);
+    });
+
+    root.querySelectorAll("[data-t]").forEach(cb => {
+      cb.addEventListener("change", () => {
+        const a = getAll();
+        a.todo = a.todo || {};
+        a.todo[cb.dataset.t] = cb.checked;
+        setAll(a);
+      });
+    });
+
+    setAll(all);
+  }
+
+  // ---------------- Info page (embed times, no inline links) ----------------
+  // Values are hard-coded from official 2026-03-01 daily calendar page.
+  const infoSchedule = [
+    "開園：9:00 / 閉園：21:00",
+    "ミニー＠ファンダーランド：13:00",
+    "ディズニー・ハーモニー・イン・カラー：15:40",
+    "Reach for the Stars：18:05",
+    "東京ディズニーランド・エレクトリカルパレード・ドリームライツ：19:10",
+    "花火（スカイ・フル・オブ・カラーズ）：20:25",
+    "シンデレラ城の環境演出（ミニーのファンダーランド）：18:45 / 19:55 / 20:40"
+  ];
+  const infoEntry = [
+    "ジャンボリミッキー！レッツ・ダンス！：12:45 / 14:00 / 15:15 / 17:10 / 18:25",
+    "クラブマウスビート：13:45 / 15:10 / 17:15 / 18:40",
+    "ミッキーのマジカルミュージックワールド：13:50 / 15:15 / 17:20 / 18:45"
+  ];
+  const infoStop = [
+    "スイスファミリー・ツリーハウス",
+    "空飛ぶダンボ",
+    "美女と野獣“魔法のものがたり”",
+    "ミッキーのフィルハーマジック",
+    "ロジャーラビットのカートゥーンスピン",
+    "（ショー）レッツ・パーティグラ！"
+  ];
+
+  function fillList(ulId, arr){
+    const ul = document.getElementById(ulId);
+    ul.innerHTML = arr.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+  }
+  fillList("infoSchedule", infoSchedule);
+  fillList("infoEntry", infoEntry);
+  fillList("infoStop", infoStop);
+
+  // PP explanation (official wording paraphrase, no inline links)
+  document.getElementById("ppExplain").innerHTML =
+    [
+      "指定された時間に短い待ち時間で施設を利用できるサービス（アプリで取得）。",
+      "次のPP取得：取得から120分後 もしくは 取得したPPの利用開始時刻の早い方を過ぎたら取得可能。",
+      "対象（ランド）：ビッグサンダー／プーさん／ホーンテッド／スター・ツアーズ／モンスターズ（全5）"
+    ].map(x => `• ${escapeHtml(x)}`).join("<br>");
+
+  // Links (small)
+  const linkData = [
+    { t:"3/1（日）日次カレンダー", u:"https://www.tokyodisneyresort.jp/tdl/daily/calendar/20260301/" },
+    { t:"休止情報", u:"https://www.tokyodisneyresort.jp/tdl/monthly/stop.html" },
+    { t:"プライオリティパス", u:"https://www.tokyodisneyresort.jp/tdr/guide/app_service/prioritypass.html" },
+    { t:"エントリー受付", u:"https://www.tokyodisneyresort.jp/tdr/guide/app_service/entry.html" },
+    { t:"パルパル公式グッズ", u:"https://www.tokyodisneyresort.jp/treasure/minniesfunderland2026/goods.html" }
+  ];
+  const infoLinks = document.getElementById("infoLinks");
+  infoLinks.innerHTML = linkData.map(x => `<li><a href="${x.u}" target="_blank" rel="noopener">${escapeHtml(x.t)}</a></li>`).join("");
+
+  // ---------------- Tools lock (5 taps) ----------------
+  const unlockBtn = document.getElementById("unlockBtn");
+  const dots = document.getElementById("dots");
+  const toolLocked = document.getElementById("toolLocked");
+  const toolOpen = document.getElementById("toolOpen");
+
+  function getUnlock(){
+    const a = getAll();
+    a.unlock = a.unlock || { n:0, open:false };
+    return a.unlock;
+  }
+  function setUnlock(n, open){
+    const a = getAll();
+    a.unlock = a.unlock || {};
+    a.unlock.n = n;
+    a.unlock.open = open;
+    setAll(a);
+  }
+  function renderDots(n){
+    dots.innerHTML = "";
+    for (let i=1;i<=5;i++){
+      const d = document.createElement("div");
+      d.className = "dot" + (i<=n ? " on" : "");
+      dots.appendChild(d);
+    }
+  }
+  function openTools(){
+    toolLocked.style.display = "none";
+    toolOpen.style.display = "block";
+    initTools(); // lazy init
+  }
+  function lockTools(){
+    toolLocked.style.display = "block";
+    toolOpen.style.display = "none";
+  }
+
+  // ---------------- Tools content ----------------
+  let toolsInited = false;
+  function initTools(){
+    if (toolsInited) return;
+    toolsInited = true;
+
+    // PP log inputs
+    const ppLogArea = document.getElementById("ppLogArea");
+    const all = getAll();
+    all.pp = all.pp || {};
+    for (let i=1;i<=5;i++){
+      if (all.pp[i] === undefined) all.pp[i] = "";
+      const inp = document.createElement("input");
+      inp.className = "actual"; // reuse styling
+      inp.setAttribute("inputmode","text");
+      inp.placeholder = `PP${i}`;
+      inp.value = all.pp[i];
+      inp.addEventListener("input", () => {
+        const a = getAll();
+        a.pp = a.pp || {};
+        a.pp[i] = inp.value;
+        setAll(a);
+      });
+      ppLogArea.appendChild(inp);
+    }
+    setAll(all);
+
+    // Export / Import / Reset
+    document.getElementById("btnExport").addEventListener("click", () => {
+      const data = getAll();
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "minipal-20260301.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const txt = await f.text();
+      const obj = JSON.parse(txt);
+      setAll(obj);
+      // rerender key parts
+      renderSchedule();
+      renderChecklist("todoPal", todoPal, "pal");
+      renderChecklist("todoDo", todoDo, "do");
+      renderChecklist("todoAttr", todoAttr, "attr");
+      // unlock state restore
+      const u = getUnlock();
+      renderDots(u.n || 0);
+      alert("Importしました");
+      e.target.value = "";
+    });
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      if (!confirm("全部リセットします。OK？")) return;
+      try{ localStorage.removeItem(KEY); }catch{}
+      location.reload();
+    });
+
+    // Copy
+    document.getElementById("btnCopy").addEventListener("click", async () => {
+      const a = getAll();
+      const lines = [];
+      lines.push("【ミニーパルパルーザ｜ログ】");
+      lines.push("");
+      lines.push("PP:");
+      if (a.pp){
+        for (let i=1;i<=5;i++){
+          lines.push(`- PP${i}: ${(a.pp[i]||"").trim()}`);
+        }
+      }
+      lines.push("");
+      lines.push("実績（時間ごと）:");
+      hours.forEach(h => {
+        const id = hourId(h);
+        const rec = a.actual?.[id] || {done:false, text:""};
+        const mark = rec.done ? "✓" : " ";
+        lines.push(`[${mark}] ${String(h).padStart(2,"0")}:00 ${(rec.text||"").trim()}`);
+      });
+      lines.push("");
+      lines.push("Todo:");
+      const todos = a.todo || {};
+      Object.keys(todos).forEach(k => {
+        if (todos[k]) lines.push(`- ${k}`);
+      });
+
+      const text = lines.join("\n").trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("コピーしました");
+      }catch{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        alert("コピーしました");
+      }
+    });
+  }
+
+  // ---------------- Unlock button handler ----------------
+  const u0 = getUnlock();
+  renderDots(u0.n || 0);
+  if (u0.open) openTools(); else lockTools();
+
+  unlockBtn.addEventListener("click", () => {
+    const u = getUnlock();
+    const n = Math.min(5, (u.n || 0) + 1);
+    const open = n >= 5;
+    setUnlock(n, open);
+    renderDots(n);
+    if (open) openTools();
+  });
+
+  // ---------------- Helpers ----------------
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function hash(str){
+    // small stable hash for string ids
+    let h = 0;
+    for (let i=0;i<str.length;i++){
+      h = (h<<5) - h + str.charCodeAt(i);
+      h |= 0;
+    }
+    return Math.abs(h).toString(36);
+  }
+
+  // ---------------- Init main ----------------
+  renderSchedule();
+  renderChecklist("todoPal", todoPal, "pal");
+  renderChecklist("todoDo", todoDo, "do");
+  renderChecklist("todoAttr", todoAttr, "attr");
+
+})();
+</script>
+</body>
+</html>
